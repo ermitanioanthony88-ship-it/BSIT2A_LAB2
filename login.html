@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="LTO eServices account login">
+	<title>LTO EServices | Login</title>
+	<style>
+		:root {
+			--navy: #092d4f;
+			--deep-navy: #061f36;
+			--blue: #1769aa;
+			--gold: #f4bf37;
+			--ink: #172b3d;
+			--muted: #657789;
+			--line: #d9e2ea;
+			--surface: #ffffff;
+			--pale-blue: #edf5fb;
+			--shadow: 0 24px 60px rgba(9, 45, 79, 0.14);
+		}
+
+		* { box-sizing: border-box; }
+
+		body {
+			margin: 0;
+			min-height: 100vh;
+			color: var(--ink);
+			background: #f5f8fa;
+			font-family: "Segoe UI", Tahoma, sans-serif;
+		}
+
+		.page-shell {
+			min-height: 100vh;
+			display: grid;
+			place-items: center;
+			padding: 36px 20px;
+			background-color: #f5f8fa;
+			background-image: linear-gradient(rgba(23, 105, 170, 0.045) 1px, transparent 1px),
+				linear-gradient(90deg, rgba(23, 105, 170, 0.045) 1px, transparent 1px);
+			background-size: 36px 36px;
+		}
+
+		.login-layout {
+			width: min(1040px, 100%);
+			display: grid;
+			grid-template-columns: 0.92fr 1.08fr;
+			overflow: hidden;
+			background: var(--surface);
+			border-radius: 8px;
+			box-shadow: var(--shadow);
+			animation: arrive 550ms ease-out both;
+		}
+
+		.welcome-panel {
+			position: relative;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			min-height: 625px;
+			padding: 48px;
+			color: #fff;
+			overflow: hidden;
+			background: var(--navy);
+		}
+
+		.welcome-panel::before,
+		.welcome-panel::after {
+			content: "";
+			position: absolute;
+			border: 1px solid rgba(244, 191, 55, 0.23);
+			border-radius: 50%;
+			pointer-events: none;
+		}
+
+		.welcome-panel::before { width: 360px; height: 360px; right: -175px; top: 115px; }
+		.welcome-panel::after { width: 470px; height: 470px; right: -230px; top: 60px; }
+
+		.brand-lockup,
+		.welcome-copy,
+		.panel-footer { position: relative; z-index: 1; }
+
+		.brand-lockup { display: flex; align-items: center; gap: 14px; }
+
+		.seal {
+			display: grid;
+			place-items: center;
+			width: 56px;
+			height: 56px;
+			flex: 0 0 auto;
+			border: 2px solid var(--gold);
+			border-radius: 50%;
+			color: var(--gold);
+			font-size: 14px;
+			font-weight: 800;
+			letter-spacing: 0.04em;
+		}
+
+		.brand-name { margin: 0; font-size: 18px; letter-spacing: 0.06em; }
+		.brand-subtitle { margin: 4px 0 0; color: #bfd4e5; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; }
+
+		.welcome-copy { max-width: 385px; margin-top: auto; margin-bottom: auto; padding: 80px 0 58px; }
+		.eyebrow { color: var(--gold); font-size: 12px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; }
+		.welcome-copy h1 { max-width: 330px; margin: 16px 0 18px; font-family: Georgia, serif; font-size: clamp(38px, 4vw, 54px); font-weight: 400; line-height: 1.06; }
+		.welcome-copy p { margin: 0; color: #c5d6e3; font-size: 15px; line-height: 1.75; }
+
+		.panel-footer { padding-top: 22px; border-top: 1px solid rgba(255,255,255,0.16); color: #b4cadb; font-size: 12px; line-height: 1.6; }
+		.panel-footer strong { display: block; margin-bottom: 3px; color: #fff; font-size: 13px; }
+
+		.form-panel { display: flex; align-items: center; padding: 58px clamp(34px, 7vw, 86px); }
+		.form-content { width: 100%; max-width: 390px; margin: 0 auto; }
+		.form-content h2 { margin: 0 0 9px; color: var(--deep-navy); font-family: Georgia, serif; font-size: 34px; font-weight: 400; }
+		.form-intro { margin: 0 0 32px; color: var(--muted); font-size: 14px; line-height: 1.6; }
+
+		.field { margin-bottom: 20px; }
+		.field label { display: block; margin-bottom: 8px; color: var(--ink); font-size: 13px; font-weight: 700; }
+		.input-wrap { position: relative; }
+		.input-wrap input {
+			width: 100%;
+			height: 50px;
+			padding: 0 15px;
+			border: 1px solid var(--line);
+			border-radius: 4px;
+			outline: none;
+			color: var(--ink);
+			background: #fbfcfd;
+			font: inherit;
+			transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
+		}
+		.input-wrap input:focus { border-color: var(--blue); background: #fff; box-shadow: 0 0 0 3px rgba(23, 105, 170, 0.12); }
+		.input-wrap input[type="password"], .input-wrap input.password-visible { padding-right: 74px; }
+
+		.toggle-password { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); padding: 6px; border: 0; color: var(--blue); background: transparent; font-size: 12px; font-weight: 700; cursor: pointer; }
+		.toggle-password:hover { color: var(--deep-navy); }
+
+		.form-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin: 2px 0 28px; }
+		.remember { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 12px; cursor: pointer; }
+		.remember input { width: 15px; height: 15px; accent-color: var(--blue); }
+		a { color: var(--blue); font-size: 12px; font-weight: 700; text-decoration: none; }
+		a:hover { text-decoration: underline; }
+
+		.submit-button { width: 100%; height: 50px; border: 0; border-radius: 4px; color: var(--deep-navy); background: var(--gold); box-shadow: 0 6px 14px rgba(244, 191, 55, 0.22); font: inherit; font-size: 14px; font-weight: 800; cursor: pointer; transition: transform 160ms ease, background 160ms ease; }
+		.submit-button:hover { background: #f8c94e; transform: translateY(-1px); }
+		.submit-button:active { transform: translateY(0); }
+
+		.register-prompt { margin: 28px 0 0; color: var(--muted); font-size: 13px; text-align: center; }
+		.register-prompt a { margin-left: 4px; }
+		.notice { min-height: 20px; margin: 18px 0 0; color: #26734d; font-size: 12px; line-height: 1.5; text-align: center; }
+
+		@keyframes arrive { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+
+		@media (max-width: 760px) {
+			.page-shell { padding: 16px; }
+			.login-layout { grid-template-columns: 1fr; }
+			.welcome-panel { min-height: 310px; padding: 28px 26px; }
+			.welcome-copy { padding: 48px 0 32px; }
+			.welcome-copy h1 { margin-top: 11px; font-size: 38px; }
+			.welcome-copy p { font-size: 14px; }
+			.panel-footer { display: none; }
+			.form-panel { padding: 42px 26px 46px; }
+		}
+
+		@media (prefers-reduced-motion: reduce) { .login-layout { animation: none; } .submit-button { transition: none; } }
+	</style>
+</head>
+<body>
+	<main class="page-shell">
+		<section class="login-layout" aria-label="LTO eServices login">
+			<aside class="welcome-panel">
+				<div class="brand-lockup">
+					<div class="seal" aria-hidden="true">LTO</div>
+					<div>
+						<p class="brand-name">LTO eServices</p>
+						<p class="brand-subtitle">Land Transportation Office</p>
+					</div>
+				</div>
+
+				<div class="welcome-copy">
+					<span class="eyebrow">Public service, simplified</span>
+					<h1>Move forward with confidence.</h1>
+					<p>Access your driver and vehicle services securely from one convenient account.</p>
+				</div>
+
+				<footer class="panel-footer">
+					<strong>Official online services portal</strong>
+					Republic of the Philippines · Department of Transportation
+				</footer>
+			</aside>
+
+			<div class="form-panel">
+				<div class="form-content">
+					<h2>Welcome back</h2>
+					<p class="form-intro">Sign in to continue to your LTO eServices account.</p>
+
+					<form id="loginForm">
+						<div class="field">
+							<label for="email">Email address</label>
+							<div class="input-wrap">
+								<input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+							</div>
+						</div>
+
+						<div class="field">
+							<label for="password">Password</label>
+							<div class="input-wrap">
+								<input id="password" name="password" type="password" autocomplete="current-password" placeholder="Enter your password" minlength="6" required>
+								<button class="toggle-password" type="button" id="togglePassword" aria-label="Show password">Show</button>
+							</div>
+						</div>
+
+						<div class="form-row">
+							<label class="remember" for="remember"><input id="remember" type="checkbox"> Remember me</label>
+							<a href="#forgot-password">Forgot password?</a>
+						</div>
+
+						<button class="submit-button" type="submit">Sign in to eServices</button>
+						<p class="notice" id="notice" role="status" aria-live="polite"></p>
+					</form>
+
+					<p class="register-prompt">New to LTO eServices? <a href="#register">Create an account</a></p>
+				</div>
+			</div>
+		</section>
+	</main>
+
+	<script>
+		const passwordInput = document.getElementById('password');
+		const togglePassword = document.getElementById('togglePassword');
+		const loginForm = document.getElementById('loginForm');
+		const notice = document.getElementById('notice');
+
+		togglePassword.addEventListener('click', () => {
+			const isHidden = passwordInput.type === 'password';
+			passwordInput.type = isHidden ? 'text' : 'password';
+			passwordInput.classList.toggle('password-visible', isHidden);
+			togglePassword.textContent = isHidden ? 'Hide' : 'Show';
+			togglePassword.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+		});
+
+		loginForm.addEventListener('submit', (event) => {
+			event.preventDefault();
+			if (!loginForm.checkValidity()) {
+				loginForm.reportValidity();
+				return;
+			}
+			notice.textContent = 'Your sign-in details are ready to be submitted.';
+		});
+	</script>
+</body>
+</html>
